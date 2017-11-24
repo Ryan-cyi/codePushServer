@@ -1,0 +1,44 @@
+extends ../layout
+block css
+  link(rel='stylesheet', href='/stylesheets/signin.css')
+
+block content
+  .container
+    form#form.form-signin(method="post")
+      h2.form-signin-heading 请登录
+      label.sr-only(for="inputEmail") 邮箱地址／用户名
+      input#inputEmail.form-control(type="text" name="account" placeholder="邮箱地址／用户名" required autofocus)
+      label.sr-only(for="inputPassword") 密码
+      input#inputPassword.form-control(type="password" name="password" placeholder="密码" required)
+      .checkbox
+        label
+          input(type="checkbox" value="remember-me")
+          span 记住我
+      a#submitBtn.btn.btn-lg.btn-primary.btn-block 登录
+
+block js
+  script().
+    var submit = false;
+    $('#submitBtn').on('click', function () {
+      if (submit) {
+        return ;
+      }
+      submit = true;
+      $.ajax({
+        type: 'post',
+        data: $('#form').serializeArray(),
+        url: $('#form').attr('action'),
+        dataType: 'json',
+        success: function (data) {
+          if (data.status == "OK") {
+            sessionStorage.setItem('auth', data.results.tokens)
+            submit = false;
+            location.href = '/tokens/' + location.search;
+          } else {
+            alert(data.errorMessage);
+            submit = false;
+          }
+        }
+      });
+    });
+
