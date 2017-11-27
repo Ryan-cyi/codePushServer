@@ -8,6 +8,8 @@ pids
 *.seed
 *.DS_Store
 
+data/
+storage/
 .grunt
 
 # Dependency directory
